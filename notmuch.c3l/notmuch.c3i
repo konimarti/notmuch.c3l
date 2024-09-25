@@ -252,7 +252,7 @@ enum Status : int {
  *
  * The result is read-only.
  */
-extern fn char * status_to_string (Status status) @extern("Notmuch_status_to_string");
+extern fn ZString  status_to_string (Status status) @extern("Notmuch_status_to_string");
 
 /*
 /* Various opaque data types. For each Notmuch_<foo>_t see the various
@@ -308,16 +308,16 @@ def Notmuch_indexopts_t = void;
  *
  * NOTMUCH_STATUS_XAPIAN_EXCEPTION: A Xapian exception occurred.
  */
-extern fn Status database_create (char *path, Notmuch_database_t **database) @extern("notmuch_database_create");
+extern fn Status database_create (ZString path, Notmuch_database_t **database) @extern("notmuch_database_create");
 
 /*
  * Like notmuch_database_create, except optionally return an error
  * message. This message is allocated by malloc and should be freed by
  * the caller.
  */
-extern fn Status database_create_verbose (char *path,
+extern fn Status database_create_verbose (ZString path,
 				 Notmuch_database_t **database,
-				 char **error_message) @extern("notmuch_database_create_verbose");
+				 ZString *error_message) @extern("notmuch_database_create_verbose");
 
 /*
  * Database open mode for notmuch_database_open.
@@ -341,7 +341,7 @@ enum DatabaseMode {
  /*
 NOTMUCH_DEPRECATED(5, 4)
 notmuch_status_t
-notmuch_database_open (const char *path,
+notmuch_database_open (const ZString path,
 		       Notmuch_database_mode_t mode,
 		       Notmuch_database_t **database);
  */
@@ -356,10 +356,10 @@ notmuch_database_open (const char *path,
  /*
 NOTMUCH_DEPRECATED(5, 4)
 notmuch_status_t
-notmuch_database_open_verbose (const char *path,
+notmuch_database_open_verbose (const ZString path,
 			       Notmuch_database_mode_t mode,
 			       Notmuch_database_t **database,
-			       char **error_message);
+			       ZString *error_message);
  */
 
 /*
@@ -466,7 +466,7 @@ notmuch_database_open_verbose (const char *path,
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Status notmuch_database_open_with_config (char *database_path,
+extern fn Status notmuch_database_open_with_config (ZString database_path,
 				   DatabaseMode mode,
 				   ZString config_path,
 				   ZString profile,
@@ -500,11 +500,11 @@ extern fn Status notmuch_database_open_with_config (char *database_path,
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Status notmuch_database_load_config (char *database_path,
-			      char *config_path,
-			      char *profile,
+extern fn Status notmuch_database_load_config (ZString database_path,
+			      ZString config_path,
+			      ZString profile,
 			      Notmuch_database_t **database,
-			      char **error_message) @extern("notmuch_database_load_config");
+			      ZString *error_message) @extern("notmuch_database_load_config");
 
 /*
  * Create a new notmuch database located at 'database_path', using
@@ -530,17 +530,17 @@ extern fn Status notmuch_database_load_config (char *database_path,
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Status notmuch_database_create_with_config (char *database_path,
-				     char *config_path,
-				     char *profile,
+extern fn Status notmuch_database_create_with_config (ZString database_path,
+				     ZString config_path,
+				     ZString profile,
 				     Notmuch_database_t **database,
-				     char **error_message) @extern("notmuch_database_create_with_config");
+				     ZString *error_message) @extern("notmuch_database_create_with_config");
 
 /*
  * Retrieve last status string for given database.
  *
  */
-extern fn char *
+extern fn ZString
 notmuch_database_status_string (Notmuch_database_t *notmuch) @extern("notmuch_database_status_string");
 
 /*
@@ -579,7 +579,7 @@ notmuch_database_close (Notmuch_database_t *database) @extern("notmuch_database_
  * A callback invoked by notmuch_database_compact to notify the user
  * of the progress of the compaction process.
  */
-def CompactStatusCb = fn void (char *message, void *closure);
+def CompactStatusCb = fn void (ZString message, void *closure);
 
 /*
  * Compact a notmuch database, backing up the original database to the
@@ -593,8 +593,8 @@ def CompactStatusCb = fn void (char *message, void *closure);
  * 'closure' is passed verbatim to any callback invoked.
  */
 extern fn Status
-notmuch_database_compact (char *path,
-			  char *backup_path,
+notmuch_database_compact (ZString path,
+			  ZString backup_path,
 			  CompactStatusCb status_cb,
 			  void *closure) @extern("notmuch_database_compact");
 
@@ -606,7 +606,7 @@ notmuch_database_compact (char *path,
  */
 extern fn Status
 notmuch_database_compact_db (Notmuch_database_t *database,
-			     char *backup_path,
+			     ZString backup_path,
 			     CompactStatusCb status_cb,
 			     void *closure) @extern("notmuch_database_compact_db");
 
@@ -626,7 +626,7 @@ notmuch_database_destroy (Notmuch_database_t *database) @extern("notmuch_databas
  * The return value is a string owned by notmuch so should not be
  * modified nor freed by the caller.
  */
-extern fn char *
+extern fn ZString
 notmuch_database_get_path (Notmuch_database_t *database) @extern("notmuch_database_get_path");
 
 /*
@@ -733,7 +733,7 @@ notmuch_database_end_atomic (Notmuch_database_t *notmuch) @extern("notmuch_datab
  */
 extern fn ulong
 notmuch_database_get_revision (Notmuch_database_t *notmuch,
-			       char **uuid) @extern("notmuch_database_get_revision");
+			       ZString *uuid) @extern("notmuch_database_get_revision");
 
 /*
  * Retrieve a directory object from the database for 'path'.
@@ -763,7 +763,7 @@ notmuch_database_get_revision (Notmuch_database_t *notmuch,
  */
 extern fn Status
 notmuch_database_get_directory (Notmuch_database_t *database,
-				char *path,
+				ZString path,
 				Notmuch_directory_t **directory) @extern("notmuch_database_get_directory");
 
 /*
@@ -828,7 +828,7 @@ notmuch_database_get_directory (Notmuch_database_t *database,
  */
 extern fn Status
 notmuch_database_index_file (Notmuch_database_t *database,
-			     char *filename,
+			     ZString filename,
 			     Notmuch_indexopts_t *indexopts,
 			     Notmuch_message_t **message) @extern("notmuch_database_index_file");
 
@@ -844,7 +844,7 @@ notmuch_database_index_file (Notmuch_database_t *database,
 NOTMUCH_DEPRECATED (5, 1)
 notmuch_status_t
 notmuch_database_add_message (Notmuch_database_t *database,
-			      const char *filename,
+			      const ZString filename,
 			      Notmuch_message_t **message);
  */
 
@@ -878,7 +878,7 @@ notmuch_database_add_message (Notmuch_database_t *database,
  */
 extern fn Status
 notmuch_database_remove_message (Notmuch_database_t *database,
-				 char *filename) @extern("notmuch_database_remove_message");
+				 ZString filename) @extern("notmuch_database_remove_message");
 
 /*
  * Find a message with the given message_id.
@@ -905,7 +905,7 @@ notmuch_database_remove_message (Notmuch_database_t *database,
  */
 extern fn Status
 notmuch_database_find_message (Notmuch_database_t *database,
-			       char *message_id,
+			       ZString message_id,
 			       Notmuch_message_t **message) @extern("notmuch_database_find_message");
 
 /*
@@ -936,7 +936,7 @@ notmuch_database_find_message (Notmuch_database_t *database,
  */
 extern fn Status
 notmuch_database_find_message_by_filename (Notmuch_database_t *notmuch,
-					   char *filename,
+					   ZString filename,
 					   Notmuch_message_t **message) @extern("notmuch_database_find_message_by_filename");
 
 
@@ -991,7 +991,7 @@ notmuch_database_reopen (Notmuch_database_t *db, DatabaseMode mode) @extern("not
  */
 extern fn Notmuch_query_t *
 notmuch_query_create (Notmuch_database_t *database,
-		      char *query_string) @extern("notmuch_query_create");
+		      ZString query_string) @extern("notmuch_query_create");
 
 enum QuerySyntax {
     XAPIAN,
@@ -1000,7 +1000,7 @@ enum QuerySyntax {
 
 extern fn Status
 notmuch_query_create_with_syntax (Notmuch_database_t *database,
-				  char *query_string,
+				  ZString query_string,
 				  QuerySyntax syntax,
 				  Notmuch_query_t **output) @extern("notmuch_query_create_with_syntax");
 /*
@@ -1028,7 +1028,7 @@ enum Sort {
 /*
  * Return the query_string of this query. See notmuch_query_create.
  */
-extern fn char *
+extern fn ZString
 notmuch_query_get_query_string (Notmuch_query_t *query) @extern("notmuch_query_get_query_string");
 
 /*
@@ -1110,7 +1110,7 @@ notmuch_query_get_sort (Notmuch_query_t *query) @extern("notmuch_query_get_sort"
  *		not excluded.
  */
 extern fn Status
-notmuch_query_add_tag_exclude (Notmuch_query_t *query, char *tag) @extern("notmuch_query_add_tag_exclude");
+notmuch_query_add_tag_exclude (Notmuch_query_t *query, ZString tag) @extern("notmuch_query_add_tag_exclude");
 
 /*
  * Execute a query for threads, returning a Notmuch_threads_t object
@@ -1373,7 +1373,7 @@ notmuch_query_count_threads_st (Notmuch_query_t *query, uint *count);
  * thread is valid, (which is until notmuch_thread_destroy or until
  * the query from which it derived is destroyed).
  */
-extern fn char *
+extern fn ZString
 notmuch_thread_get_thread_id (Notmuch_thread_t *thread) @extern("notmuch_thread_get_thread_id");
 
 /*
@@ -1447,7 +1447,7 @@ notmuch_thread_get_matched_messages (Notmuch_thread_t *thread) @extern("notmuch_
  * thread is valid, (which is until notmuch_thread_destroy or until
  * the query from which it derived is destroyed).
  */
-extern fn char *
+extern fn ZString
 notmuch_thread_get_authors (Notmuch_thread_t *thread) @extern("notmuch_thread_get_authors");
 
 /*
@@ -1462,7 +1462,7 @@ notmuch_thread_get_authors (Notmuch_thread_t *thread) @extern("notmuch_thread_ge
  * thread is valid, (which is until notmuch_thread_destroy or until
  * the query from which it derived is destroyed).
  */
-extern fn char *
+extern fn ZString
 notmuch_thread_get_subject (Notmuch_thread_t *thread) @extern("notmuch_thread_get_subject");
 
 /*
@@ -1495,7 +1495,7 @@ notmuch_thread_get_newest_date (Notmuch_thread_t *thread) @extern("notmuch_threa
  *
  *     Notmuch_thread_t *thread;
  *     Notmuch_tags_t *tags;
- *     const char *tag;
+ *     const ZString tag;
  *
  *     thread = notmuch_threads_get (threads);
  *
@@ -1610,7 +1610,7 @@ notmuch_message_get_database (Notmuch_message_t *message) @extern("notmuch_messa
  * This function will return NULL if triggers an unhandled Xapian
  * exception.
  */
-extern fn char *
+extern fn ZString
 notmuch_message_get_message_id (Notmuch_message_t *message) @extern("notmuch_message_get_message_id");
 
 /*
@@ -1625,7 +1625,7 @@ notmuch_message_get_message_id (Notmuch_message_t *message) @extern("notmuch_mes
  * This function will return NULL if triggers an unhandled Xapian
  * exception.
  */
-extern fn char *
+extern fn ZString
 notmuch_message_get_thread_id (Notmuch_message_t *message) @extern("notmuch_message_get_thread_id");
 
 /*
@@ -1681,7 +1681,7 @@ notmuch_message_count_files (Notmuch_message_t *message) @extern("notmuch_messag
  *
  * This function returns NULL if it triggers a Xapian exception.
  */
-extern fn char *
+extern fn ZString
 notmuch_message_get_filename (Notmuch_message_t *message) @extern("notmuch_message_get_filename");
 
 /*
@@ -1797,8 +1797,8 @@ notmuch_message_get_date (Notmuch_message_t *message) @extern("notmuch_message_g
  * Returns an empty string ("") if the message does not contain a
  * header line matching 'header'. Returns NULL if any error occurs.
  */
-extern fn char *
-notmuch_message_get_header (Notmuch_message_t *message, char *header) @extern("notmuch_message_get_header");
+extern fn ZString
+notmuch_message_get_header (Notmuch_message_t *message, ZString header) @extern("notmuch_message_get_header");
 
 /*
  * Get the tags for 'message', returning a Notmuch_tags_t object which
@@ -1812,7 +1812,7 @@ notmuch_message_get_header (Notmuch_message_t *message, char *header) @extern("n
  *
  *     Notmuch_message_t *message;
  *     Notmuch_tags_t *tags;
- *     const char *tag;
+ *     const ZString tag;
  *
  *     message = notmuch_database_find_message (database, message_id);
  *
@@ -1858,7 +1858,7 @@ const int NOTMUCH_TAG_MAX = 200;
  *	mode so message cannot be modified.
  */
 extern fn Status
-notmuch_message_add_tag (Notmuch_message_t *message, char *tag) @extern("notmuch_message_add_tag");
+notmuch_message_add_tag (Notmuch_message_t *message, ZString tag) @extern("notmuch_message_add_tag");
 
 /*
  * Remove a tag from the given message.
@@ -1876,7 +1876,7 @@ notmuch_message_add_tag (Notmuch_message_t *message, char *tag) @extern("notmuch
  *	mode so message cannot be modified.
  */
 extern fn Status
-notmuch_message_remove_tag (Notmuch_message_t *message, char *tag) @extern("notmuch_message_remove_tag");
+notmuch_message_remove_tag (Notmuch_message_t *message, ZString tag) @extern("notmuch_message_remove_tag");
 
 /*
  * Remove all tags from the given message.
@@ -2102,7 +2102,7 @@ notmuch_message_destroy (Notmuch_message_t *message) @extern("notmuch_message_de
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Status
-notmuch_message_get_property (Notmuch_message_t *message, char *key, char **value) @extern("notmuch_message_get_property");
+notmuch_message_get_property (Notmuch_message_t *message, ZString key, ZString *value) @extern("notmuch_message_get_property");
 
 /*
  * Add a (key,value) pair to a message
@@ -2114,7 +2114,7 @@ notmuch_message_get_property (Notmuch_message_t *message, char *key, char **valu
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Status
-notmuch_message_add_property (Notmuch_message_t *message, char *key, char *value) @extern("notmuch_message_add_property");
+notmuch_message_add_property (Notmuch_message_t *message, ZString key, ZString value) @extern("notmuch_message_add_property");
 
 /*
  * Remove a (key,value) pair from a message.
@@ -2128,7 +2128,7 @@ notmuch_message_add_property (Notmuch_message_t *message, char *key, char *value
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Status
-notmuch_message_remove_property (Notmuch_message_t *message, char *key, char *value) @extern("notmuch_message_remove_property");
+notmuch_message_remove_property (Notmuch_message_t *message, ZString key, ZString value) @extern("notmuch_message_remove_property");
 
 /*
  * Remove all (key,value) pairs from the given message.
@@ -2144,7 +2144,7 @@ notmuch_message_remove_property (Notmuch_message_t *message, char *key, char *va
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Status
-notmuch_message_remove_all_properties (Notmuch_message_t *message, char *key) @extern("notmuch_message_remove_all_properties");
+notmuch_message_remove_all_properties (Notmuch_message_t *message, ZString key) @extern("notmuch_message_remove_all_properties");
 
 /*
  * Remove all (prefix*,value) pairs from the given message
@@ -2160,7 +2160,7 @@ notmuch_message_remove_all_properties (Notmuch_message_t *message, char *key) @e
  * @since libnotmuch 5.1 (notmuch 0.26)
  */
 extern fn Status
-notmuch_message_remove_all_properties_with_prefix (Notmuch_message_t *message, char *prefix) @extern("notmuch_message_remove_all_properties_with_prefix");
+notmuch_message_remove_all_properties_with_prefix (Notmuch_message_t *message, ZString prefix) @extern("notmuch_message_remove_all_properties_with_prefix");
 
 /*
  * Opaque message property iterator
@@ -2203,7 +2203,7 @@ typedef struct _Notmuch_string_map_iterator Notmuch_message_properties_t;
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Notmuch_message_properties_t *
-notmuch_message_get_properties (Notmuch_message_t *message, char *key, Notmuch_bool_t exact) @extern("notmuch_message_get_properties");
+notmuch_message_get_properties (Notmuch_message_t *message, ZString key, Notmuch_bool_t exact) @extern("notmuch_message_get_properties");
 
 /*
  * Return the number of properties named "key" belonging to the specific message.
@@ -2219,7 +2219,7 @@ notmuch_message_get_properties (Notmuch_message_t *message, char *key, Notmuch_b
  * @since libnotmuch 5.2 (notmuch 0.27)
  */
 extern fn Status
-notmuch_message_count_properties (Notmuch_message_t *message, char *key, uint *count) @extern("notmuch_message_count_properties");
+notmuch_message_count_properties (Notmuch_message_t *message, ZString key, uint *count) @extern("notmuch_message_count_properties");
 
 /*
  * Is the given *properties* iterator pointing at a valid (key,value)
@@ -2262,7 +2262,7 @@ notmuch_message_properties_move_to_next (Notmuch_message_properties_t *propertie
  *
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn char *
+extern fn ZString
 notmuch_message_properties_key (Notmuch_message_properties_t *properties) @extern("notmuch_message_properties_key");
 
 /*
@@ -2272,7 +2272,7 @@ notmuch_message_properties_key (Notmuch_message_properties_t *properties) @exter
  *
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn char *
+extern fn ZString
 notmuch_message_properties_value (Notmuch_message_properties_t *properties) @extern("notmuch_message_properties_value");
 
 
@@ -2313,7 +2313,7 @@ notmuch_tags_valid (Notmuch_tags_t *tags) @extern("notmuch_tags_valid");
  * See the documentation of Notmuch_message_get_tags for example code
  * showing how to iterate over a Notmuch_tags_t object.
  */
-extern fn char *
+extern fn ZString
 notmuch_tags_get (Notmuch_tags_t *tags) @extern("notmuch_tags_get");
 
 /*
@@ -2453,7 +2453,7 @@ notmuch_filenames_valid (Notmuch_filenames_t *filenames) @extern("notmuch_filena
  * It is acceptable to pass NULL for 'filenames', in which case this
  * function will always return NULL.
  */
-extern fn char *
+extern fn ZString
 notmuch_filenames_get (Notmuch_filenames_t *filenames) @extern("notmuch_filenames_get");
 
 /*
@@ -2495,7 +2495,7 @@ notmuch_filenames_destroy (Notmuch_filenames_t *filenames) @extern("notmuch_file
  * @retval #NOTMUCH_STATUS_SUCCESS
  */
 extern fn Status
-notmuch_database_set_config (Notmuch_database_t *db, char *key, char *value) @extern("notmuch_database_set_config");
+notmuch_database_set_config (Notmuch_database_t *db, ZString key, ZString value) @extern("notmuch_database_set_config");
 
 /*
  * retrieve config item 'key', assign to  'value'
@@ -2510,7 +2510,7 @@ notmuch_database_set_config (Notmuch_database_t *db, char *key, char *value) @ex
  *
  */
 extern fn Status
-notmuch_database_get_config (Notmuch_database_t *db, char *key, char **value) @extern("notmuch_database_get_config");
+notmuch_database_get_config (Notmuch_database_t *db, ZString key, ZString *value) @extern("notmuch_database_get_config");
 
 /*
  * Create an iterator for all config items with keys matching a given prefix
@@ -2518,7 +2518,7 @@ notmuch_database_get_config (Notmuch_database_t *db, char *key, char **value) @e
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Status
-notmuch_database_get_config_list (Notmuch_database_t *db, char *prefix,
+notmuch_database_get_config_list (Notmuch_database_t *db, ZString prefix,
 				  Notmuch_config_list_t **out) @extern("notmuch_database_get_config_list");
 
 /*
@@ -2537,7 +2537,7 @@ notmuch_config_list_valid (Notmuch_config_list_t *config_list) @extern("notmuch_
  *
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn char *
+extern fn ZString
 notmuch_config_list_key (Notmuch_config_list_t *config_list) @extern("notmuch_config_list_key");
 
 /*
@@ -2549,7 +2549,7 @@ notmuch_config_list_key (Notmuch_config_list_t *config_list) @extern("notmuch_co
  * @since libnotmuch 4.4 (notmuch 0.23)
  * @retval NULL for errors
  */
-extern fn char *
+extern fn ZString
 notmuch_config_list_value (Notmuch_config_list_t *config_list) @extern("notmuch_config_list_value");
 
 
@@ -2606,7 +2606,7 @@ enum ConfigKey : int {
  *         'key'.  Otherwise returns a string owned by notmuch which should
  *         not be modified nor freed by the caller.
  */
-extern fn char *
+extern fn ZString
 notmuch_config_get (Notmuch_database_t *notmuch, ConfigKey key) @extern("notmuch_config_get");
 
 /*
@@ -2624,7 +2624,7 @@ notmuch_config_get (Notmuch_database_t *notmuch, ConfigKey key) @extern("notmuch
  * @retval returns any return value for notmuch_database_set_config.
  */
 extern fn Status
-notmuch_config_set (Notmuch_database_t *notmuch, ConfigKey key, char *val) @extern("notmuch_config_set");
+notmuch_config_set (Notmuch_database_t *notmuch, ConfigKey key, ZString val) @extern("notmuch_config_set");
 
 /*
  * Returns an iterator for a ';'-delimited list of configuration values
@@ -2656,7 +2656,7 @@ notmuch_config_get_values (Notmuch_database_t *notmuch, ConfigKey key) @extern("
  * @retval NULL in case of error.
  */
 extern fn Notmuch_config_values_t *
-notmuch_config_get_values_string (Notmuch_database_t *notmuch, char *key) @extern("notmuch_config_get_values_string");
+notmuch_config_get_values_string (Notmuch_database_t *notmuch, ZString key) @extern("notmuch_config_get_values_string");
 
 /*
  * Is the given 'config_values' iterator pointing at a valid element.
@@ -2680,7 +2680,7 @@ notmuch_config_values_valid (Notmuch_config_values_t *values) @extern("notmuch_c
  *
  * @retval a string with the same lifetime as the iterator
  */
-extern fn char *
+extern fn ZString
 notmuch_config_values_get (Notmuch_config_values_t *values) @extern("notmuch_config_values_get");
 
 /*
@@ -2730,7 +2730,7 @@ notmuch_config_values_destroy (Notmuch_config_values_t *values) @extern("notmuch
  */
 extern fn Notmuch_config_pairs_t *
 notmuch_config_get_pairs (Notmuch_database_t *notmuch,
-			  char *prefix) @extern("notmuch_config_get_pairs");
+			  ZString prefix) @extern("notmuch_config_get_pairs");
 
 /*
  * Is the given 'config_pairs' iterator pointing at a valid element.
@@ -2765,7 +2765,7 @@ notmuch_config_pairs_move_to_next (Notmuch_config_pairs_t *pairs) @extern("notmu
  *
  * @retval a string with the same lifetime as the iterator
  */
-extern fn char *
+extern fn ZString
 notmuch_config_pairs_key (Notmuch_config_pairs_t *pairs) @extern("notmuch_config_pairs_key");
 
 /*
@@ -2777,7 +2777,7 @@ notmuch_config_pairs_key (Notmuch_config_pairs_t *pairs) @extern("notmuch_config
  *
  * @retval a string with the same lifetime as the iterator
  */
-extern fn char *
+extern fn ZString
 notmuch_config_pairs_value (Notmuch_config_pairs_t *pairs) @extern("notmuch_config_pairs_value");
 
 /*
@@ -2816,7 +2816,7 @@ notmuch_config_get_bool (Notmuch_database_t *notmuch,
  *
  * @retval NULL if no config file was loaded
  */
-extern fn char *
+extern fn ZString
 notmuch_config_path (Notmuch_database_t *notmuch) @extern("notmuch_config_path");
 
 /*
@@ -2885,4 +2885,4 @@ notmuch_indexopts_destroy (Notmuch_indexopts_t *options) @extern("notmuch_indexo
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
 extern fn Notmuch_bool_t
-notmuch_built_with (char *name) @extern("notmuch_built_with");
+notmuch_built_with (ZString name) @extern("notmuch_built_with");

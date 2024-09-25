@@ -4,11 +4,9 @@ module nm;
 import std::io;
 
 /*
-* TODOs:
-* - we have to explicitly cast the enums to be used?
+* TODOs: move foreach to a struct Tags as a method
 *
 */
-
 macro @foreach(tags; @body(tag)) {
 	for (; nm::notmuch_tags_valid(tags); ) {
 		@body(nm::notmuch_tags_get(tags));
@@ -23,7 +21,6 @@ fn int main() {
 	ZString config_path;
 	ZString profile;
 	ZString err;
-
 
 	// open database
 	Status status = nm::notmuch_database_open_with_config (
@@ -42,7 +39,7 @@ fn int main() {
 	// handle tags
 	Notmuch_tags_t *tags = nm::notmuch_database_get_all_tags(db);
 
-	@foreach(tags; char* tag) {
+	@foreach(tags; ZString tag) {
 		io::printfn("tag: %s", (ZString)tag);
 	};
 
