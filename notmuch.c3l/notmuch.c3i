@@ -120,8 +120,7 @@ def Notmuch_bool_t = int;
  * A zero value (NOTMUCH_STATUS_SUCCESS) indicates that the function
  * completed without error. Any other value indicates an error.
  */
-def Notmuch_status_t = int;
-enum Status {
+enum Status : int {
     /*
      * No error occurred.
      */
@@ -253,7 +252,7 @@ enum Status {
  *
  * The result is read-only.
  */
-extern fn char * status_to_string (Notmuch_status_t status) @extern("Notmuch_status_to_string");
+extern fn char * status_to_string (Status status) @extern("Notmuch_status_to_string");
 
 /*
 /* Various opaque data types. For each Notmuch_<foo>_t see the various
@@ -309,14 +308,14 @@ def Notmuch_indexopts_t = void;
  *
  * NOTMUCH_STATUS_XAPIAN_EXCEPTION: A Xapian exception occurred.
  */
-extern fn Notmuch_status_t database_create (char *path, Notmuch_database_t **database) @extern("notmuch_database_create");
+extern fn Status database_create (char *path, Notmuch_database_t **database) @extern("notmuch_database_create");
 
 /*
  * Like notmuch_database_create, except optionally return an error
  * message. This message is allocated by malloc and should be freed by
  * the caller.
  */
-extern fn Notmuch_status_t database_create_verbose (char *path,
+extern fn Status database_create_verbose (char *path,
 				 Notmuch_database_t **database,
 				 char **error_message) @extern("notmuch_database_create_verbose");
 
@@ -467,12 +466,12 @@ notmuch_database_open_verbose (const char *path,
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Notmuch_status_t notmuch_database_open_with_config (char *database_path,
+extern fn Status notmuch_database_open_with_config (char *database_path,
 				   DatabaseMode mode,
-				   char *config_path,
-				   char *profile,
+				   ZString config_path,
+				   ZString profile,
 				   Notmuch_database_t **database,
-				   char **error_message) @extern("notmuch_database_open_with_config");
+				   ZString *error_message) @extern("notmuch_database_open_with_config");
 
 
 /*
@@ -501,7 +500,7 @@ extern fn Notmuch_status_t notmuch_database_open_with_config (char *database_pat
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Notmuch_status_t notmuch_database_load_config (char *database_path,
+extern fn Status notmuch_database_load_config (char *database_path,
 			      char *config_path,
 			      char *profile,
 			      Notmuch_database_t **database,
@@ -531,7 +530,7 @@ extern fn Notmuch_status_t notmuch_database_load_config (char *database_path,
  * @since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Notmuch_status_t notmuch_database_create_with_config (char *database_path,
+extern fn Status notmuch_database_create_with_config (char *database_path,
 				     char *config_path,
 				     char *profile,
 				     Notmuch_database_t **database,
@@ -573,7 +572,7 @@ notmuch_database_status_string (Notmuch_database_t *notmuch) @extern("notmuch_da
  *	database has been closed but there are no guarantees the
  *	changes to the database, if any, have been flushed to disk.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_close (Notmuch_database_t *database) @extern("notmuch_database_close");
 
 /*
@@ -593,7 +592,7 @@ def CompactStatusCb = fn void (char *message, void *closure);
  * be called with diagnostic and informational messages. The argument
  * 'closure' is passed verbatim to any callback invoked.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_compact (char *path,
 			  char *backup_path,
 			  CompactStatusCb status_cb,
@@ -605,7 +604,7 @@ notmuch_database_compact (char *path,
  *
  * @since libnnotmuch 5.4 (notmuch 0.32)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_compact_db (Notmuch_database_t *database,
 			     char *backup_path,
 			     CompactStatusCb status_cb,
@@ -618,7 +617,7 @@ notmuch_database_compact_db (Notmuch_database_t *database,
  * Return value as in notmuch_database_close if the database was open;
  * notmuch_database_destroy itself has no failure modes.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_destroy (Notmuch_database_t *database) @extern("notmuch_database_destroy");
 
 /*
@@ -672,7 +671,7 @@ notmuch_database_needs_upgrade (Notmuch_database_t *database) @extern("notmuch_d
  * any callback invoked.
  */
 def ProgressNotify = fn void (void *closure, double progress);
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_upgrade (Notmuch_database_t *database, ProgressNotify pn,
 			  void *closure) @extern("notmuch_database_upgrade");
 
@@ -695,7 +694,7 @@ notmuch_database_upgrade (Notmuch_database_t *database, ProgressNotify pn,
  * NOTMUCH_STATUS_XAPIAN_EXCEPTION: A Xapian exception occurred;
  *	atomic section not entered.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_begin_atomic (Notmuch_database_t *notmuch) @extern("notmuch_database_begin_atomic");
 
 /*
@@ -714,7 +713,7 @@ notmuch_database_begin_atomic (Notmuch_database_t *notmuch) @extern("notmuch_dat
  * NOTMUCH_STATUS_UNBALANCED_ATOMIC: The database is not currently in
  *	an atomic section.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_end_atomic (Notmuch_database_t *notmuch) @extern("notmuch_database_end_atomic");
 
 /*
@@ -762,7 +761,7 @@ notmuch_database_get_revision (Notmuch_database_t *notmuch,
  * NOTMUCH_STATUS_UPGRADE_REQUIRED: The caller must upgrade the
  *      database to use this function.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_get_directory (Notmuch_database_t *database,
 				char *path,
 				Notmuch_directory_t **directory) @extern("notmuch_database_get_directory");
@@ -827,7 +826,7 @@ notmuch_database_get_directory (Notmuch_database_t *database,
  *
  * @since libnotmuch 5.1 (notmuch 0.26)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_index_file (Notmuch_database_t *database,
 			     char *filename,
 			     Notmuch_indexopts_t *indexopts,
@@ -877,7 +876,7 @@ notmuch_database_add_message (Notmuch_database_t *database,
  * NOTMUCH_STATUS_UPGRADE_REQUIRED: The caller must upgrade the
  *      database to use this function.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_remove_message (Notmuch_database_t *database,
 				 char *filename) @extern("notmuch_database_remove_message");
 
@@ -904,7 +903,7 @@ notmuch_database_remove_message (Notmuch_database_t *database,
  *
  * NOTMUCH_STATUS_XAPIAN_EXCEPTION: A Xapian exception occurred
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_find_message (Notmuch_database_t *database,
 			       char *message_id,
 			       Notmuch_message_t **message) @extern("notmuch_database_find_message");
@@ -935,7 +934,7 @@ notmuch_database_find_message (Notmuch_database_t *database,
  * NOTMUCH_STATUS_UPGRADE_REQUIRED: The caller must upgrade the
  *      database to use this function.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_find_message_by_filename (Notmuch_database_t *notmuch,
 					   char *filename,
 					   Notmuch_message_t **message) @extern("notmuch_database_find_message_by_filename");
@@ -962,7 +961,7 @@ notmuch_database_get_all_tags (Notmuch_database_t *db) @extern("notmuch_database
  * @retval #NOTMUCH_STATUS_ILLEGAL_ARGUMENT	The passed database was not open.
  * @retval #NOTMUCH_STATUS_XAPIAN_EXCEPTION	A Xapian exception occured
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_reopen (Notmuch_database_t *db, DatabaseMode mode) @extern("notmuch_database_reopen");
 
 /*
@@ -999,7 +998,7 @@ enum QuerySyntax {
     SEXP
 }
 
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_create_with_syntax (Notmuch_database_t *database,
 				  char *query_string,
 				  QuerySyntax syntax,
@@ -1110,7 +1109,7 @@ notmuch_query_get_sort (Notmuch_query_t *query) @extern("notmuch_query_get_sort"
  * NOTMUCH_STATUS_IGNORED: tag is explicitly present in the query, so
  *		not excluded.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_add_tag_exclude (Notmuch_query_t *query, char *tag) @extern("notmuch_query_add_tag_exclude");
 
 /*
@@ -1154,7 +1153,7 @@ notmuch_query_add_tag_exclude (Notmuch_query_t *query, char *tag) @extern("notmu
  *
  * @since libnotmuch 5.0 (notmuch 0.25)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_search_threads (Notmuch_query_t *query,
 			      Notmuch_threads_t **out) @extern("Notmuch_query_search_threads");
 
@@ -1215,7 +1214,7 @@ notmuch_query_search_threads_st (Notmuch_query_t *query, notmuch_threads_t **out
  *
  * @since libnotmuch 5 (notmuch 0.25)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_search_messages (Notmuch_query_t *query,
 			       Notmuch_messages_t **out) @extern("notmuch_query_search_messages");
 /*
@@ -1313,7 +1312,7 @@ notmuch_threads_destroy (Notmuch_threads_t *threads) @extern("notmuch_threads_de
  *
  * @since libnotmuch 5 (notmuch 0.25)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_count_messages (Notmuch_query_t *query, uint *count) @extern("notmuch_query_count_messages");
 
 /*
@@ -1351,7 +1350,7 @@ notmuch_query_count_messages_st (Notmuch_query_t *query, uint *count);
  *
  * @since libnotmuch 5 (notmuch 0.25)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_query_count_threads (Notmuch_query_t *query, uint *count) @extern("notmuch_query_count_threads");
 
 /*
@@ -1710,7 +1709,7 @@ notmuch_message_get_filenames (Notmuch_message_t *message) @extern("notmuch_mess
  * in here by calling notmuch_message_destroy, since it refers to the
  * original message, not to the reindexed message.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_reindex (Notmuch_message_t *message,
 			 Notmuch_indexopts_t *indexopts) @extern("notmuch_message_reindex");
 
@@ -1758,7 +1757,7 @@ notmuch_message_get_flag (Notmuch_message_t *message,
  *
  * @since libnotmuch 5.3 (notmuch 0.31)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_get_flag_st (Notmuch_message_t *message,
 			     MessageFlag flag,
 			     Notmuch_bool_t *is_set) @extern("notmuch_message_get_flag_st");
@@ -1858,7 +1857,7 @@ const int NOTMUCH_TAG_MAX = 200;
  * NOTMUCH_STATUS_READ_ONLY_DATABASE: Database was opened in read-only
  *	mode so message cannot be modified.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_add_tag (Notmuch_message_t *message, char *tag) @extern("notmuch_message_add_tag");
 
 /*
@@ -1876,7 +1875,7 @@ notmuch_message_add_tag (Notmuch_message_t *message, char *tag) @extern("notmuch
  * NOTMUCH_STATUS_READ_ONLY_DATABASE: Database was opened in read-only
  *	mode so message cannot be modified.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_remove_tag (Notmuch_message_t *message, char *tag) @extern("notmuch_message_remove_tag");
 
 /*
@@ -1890,7 +1889,7 @@ notmuch_message_remove_tag (Notmuch_message_t *message, char *tag) @extern("notm
  * @retval #NOTMUCH_STATUS_XAPIAN_EXCEPTION: an exception was thrown
  *      accessing the database.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_remove_all_tags (Notmuch_message_t *message) @extern("notmuch_message_remove_all_tags");
 
 /*
@@ -1925,7 +1924,7 @@ notmuch_message_remove_all_tags (Notmuch_message_t *message) @extern("notmuch_me
  * Notmuch_message_tags_to_maildir_flags for synchronizing tag changes
  * back to maildir flags.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_maildir_flags_to_tags (Notmuch_message_t *message) @extern("notmuch_message_maildir_flags_to_tags");
 
 /*
@@ -1955,7 +1954,7 @@ notmuch_message_has_maildir_flag (Notmuch_message_t *message, char flag);
  * @retval #NOTMUCH_STATUS_XAPIAN_EXCEPTION Accessing the database
  * triggered an exception.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_has_maildir_flag_st (Notmuch_message_t *message,
 				     char flag,
 				     Notmuch_bool_t *is_set) @extern("notmuch_message_has_maildir_flag_st");
@@ -1994,7 +1993,7 @@ notmuch_message_has_maildir_flag_st (Notmuch_message_t *message,
  * Notmuch_message_thaw). See also Notmuch_message_maildir_flags_to_tags
  * for synchronizing maildir flag changes back to tags.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_tags_to_maildir_flags (Notmuch_message_t *message) @extern("notmuch_message_tags_to_maildir_flags");
 
 /*
@@ -2038,7 +2037,7 @@ notmuch_message_tags_to_maildir_flags (Notmuch_message_t *message) @extern("notm
  * NOTMUCH_STATUS_READ_ONLY_DATABASE: Database was opened in read-only
  *	mode so message cannot be modified.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_freeze (Notmuch_message_t *message) @extern("notmuch_message_freeze");
 
 /*
@@ -2062,7 +2061,7 @@ notmuch_message_freeze (Notmuch_message_t *message) @extern("notmuch_message_fre
  *	number of calls to notmuch_message_freeze and
  *	Notmuch_message_thaw.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_thaw (Notmuch_message_t *message) @extern("notmuch_message_thaw");
 
 /*
@@ -2102,7 +2101,7 @@ notmuch_message_destroy (Notmuch_message_t *message) @extern("notmuch_message_de
  * - NOTMUCH_STATUS_SUCCESS: No error occurred.
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_get_property (Notmuch_message_t *message, char *key, char **value) @extern("notmuch_message_get_property");
 
 /*
@@ -2114,7 +2113,7 @@ notmuch_message_get_property (Notmuch_message_t *message, char *key, char **valu
  * - NOTMUCH_STATUS_SUCCESS: No error occurred.
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_add_property (Notmuch_message_t *message, char *key, char *value) @extern("notmuch_message_add_property");
 
 /*
@@ -2128,7 +2127,7 @@ notmuch_message_add_property (Notmuch_message_t *message, char *key, char *value
  * - NOTMUCH_STATUS_SUCCESS: No error occurred.
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_remove_property (Notmuch_message_t *message, char *key, char *value) @extern("notmuch_message_remove_property");
 
 /*
@@ -2144,7 +2143,7 @@ notmuch_message_remove_property (Notmuch_message_t *message, char *key, char *va
  *
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_remove_all_properties (Notmuch_message_t *message, char *key) @extern("notmuch_message_remove_all_properties");
 
 /*
@@ -2160,7 +2159,7 @@ notmuch_message_remove_all_properties (Notmuch_message_t *message, char *key) @e
  *
  * @since libnotmuch 5.1 (notmuch 0.26)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_remove_all_properties_with_prefix (Notmuch_message_t *message, char *prefix) @extern("notmuch_message_remove_all_properties_with_prefix");
 
 /*
@@ -2219,7 +2218,7 @@ notmuch_message_get_properties (Notmuch_message_t *message, char *key, Notmuch_b
  *
  * @since libnotmuch 5.2 (notmuch 0.27)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_message_count_properties (Notmuch_message_t *message, char *key, uint *count) @extern("notmuch_message_count_properties");
 
 /*
@@ -2378,7 +2377,7 @@ notmuch_tags_destroy (Notmuch_tags_t *tags) @extern("notmuch_tags_destroy");
  * NOTMUCH_STATUS_READ_ONLY_DATABASE: Database was opened in read-only
  *	mode so directory mtime cannot be modified.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_directory_set_mtime (Notmuch_directory_t *directory,
 			     Time_t mtime) @extern("notmuch_directory_set_mtime");
 
@@ -2423,7 +2422,7 @@ notmuch_directory_get_child_directories (Notmuch_directory_t *directory) @extern
  *
  * @since libnotmuch 4.3 (notmuch 0.21)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_directory_delete (Notmuch_directory_t *directory) @extern("notmuch_directory_delete");
 
 /*
@@ -2495,7 +2494,7 @@ notmuch_filenames_destroy (Notmuch_filenames_t *filenames) @extern("notmuch_file
  *      accessing the database.
  * @retval #NOTMUCH_STATUS_SUCCESS
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_set_config (Notmuch_database_t *db, char *key, char *value) @extern("notmuch_database_set_config");
 
 /*
@@ -2510,7 +2509,7 @@ notmuch_database_set_config (Notmuch_database_t *db, char *key, char *value) @ex
  * @since libnotmuch 4.4 (notmuch 0.23)
  *
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_get_config (Notmuch_database_t *db, char *key, char **value) @extern("notmuch_database_get_config");
 
 /*
@@ -2518,7 +2517,7 @@ notmuch_database_get_config (Notmuch_database_t *db, char *key, char **value) @e
  *
  * @since libnotmuch 4.4 (notmuch 0.23)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_database_get_config_list (Notmuch_database_t *db, char *prefix,
 				  Notmuch_config_list_t **out) @extern("notmuch_database_get_config_list");
 
@@ -2624,7 +2623,7 @@ notmuch_config_get (Notmuch_database_t *notmuch, ConfigKey key) @extern("notmuch
  *
  * @retval returns any return value for notmuch_database_set_config.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_config_set (Notmuch_database_t *notmuch, ConfigKey key, char *val) @extern("notmuch_config_set");
 
 /*
@@ -2807,7 +2806,7 @@ notmuch_config_pairs_destroy (Notmuch_config_pairs_t *pairs) @extern("notmuch_co
  * @retval #NOTMUCH_STATUS_ILLEGAL_ARGUMENT if either key is unknown
  * or the corresponding value does not convert to Boolean.
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_config_get_bool (Notmuch_database_t *notmuch,
 			 ConfigKey key,
 			 Notmuch_bool_t *val) @extern("notmuch_config_get_bool");
@@ -2858,7 +2857,7 @@ enum DecryptionPolicy {
  *
  * @since libnotmuch 5.1 (notmuch 0.26)
  */
-extern fn Notmuch_status_t
+extern fn Status
 notmuch_indexopts_set_decrypt_policy (Notmuch_indexopts_t *indexopts,
 				      DecryptionPolicy decrypt_policy) @extern("notmuch_indexopts_set_decrypt_policy");
 

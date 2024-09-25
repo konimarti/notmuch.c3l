@@ -19,16 +19,20 @@ macro @foreach(tags; @body(tag)) {
 fn int main() {
 	
 	Notmuch_database_t *db;
-	char *err;
+	ZString db_path;
+	ZString config_path;
+	ZString profile;
+	ZString err;
+
 
 	// open database
-	Notmuch_status_t status = nm::notmuch_database_open_with_config (
-				   (char*)0, // char* db_path
+	Status status = nm::notmuch_database_open_with_config (
+				   db_path, // char* db_path
 				   DatabaseMode.READONLY,
-				   (char*)0, // char *config_path,
-				   (char*)0, // char *profile,
+				   config_path, // char *config_path,
+				   profile, // char *profile,
 				   &db, &err);
-	if (status == (int)Status.SUCCESS) {
+	if (status == Status.SUCCESS) {
 		io::printn("database: open");
 	} else {
 		io::printfn("database: failed to open: %s", err);
@@ -46,11 +50,11 @@ fn int main() {
 
 	// close database
    	status = nm::notmuch_database_destroy(db);
-	if (status == (int)Status.SUCCESS) {
+	if (status == Status.SUCCESS) {
 		io::printn("database: close");
 	} else {
 		io::printn("database: failed to close");
 	}
-	return status;
+	return (int)status;
 
 }
