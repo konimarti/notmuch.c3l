@@ -323,7 +323,6 @@ extern fn Notmuch_status_t database_create_verbose (char *path,
 /*
  * Database open mode for notmuch_database_open.
  */
-def Notmuch_database_mode_t = int;
 enum DatabaseMode {
     /*
      * Open database for reading only.
@@ -469,7 +468,7 @@ notmuch_database_open_verbose (const char *path,
  */
 
 extern fn Notmuch_status_t notmuch_database_open_with_config (char *database_path,
-				   Notmuch_database_mode_t mode,
+				   DatabaseMode mode,
 				   char *config_path,
 				   char *profile,
 				   Notmuch_database_t **database,
@@ -964,7 +963,7 @@ notmuch_database_get_all_tags (Notmuch_database_t *db) @extern("notmuch_database
  * @retval #NOTMUCH_STATUS_XAPIAN_EXCEPTION	A Xapian exception occured
  */
 extern fn Notmuch_status_t
-notmuch_database_reopen (Notmuch_database_t *db, Notmuch_database_mode_t mode) @extern("notmuch_database_reopen");
+notmuch_database_reopen (Notmuch_database_t *db, DatabaseMode mode) @extern("notmuch_database_reopen");
 
 /*
  * Create a new query for 'database'.
@@ -995,7 +994,6 @@ extern fn Notmuch_query_t *
 notmuch_query_create (Notmuch_database_t *database,
 		      char *query_string) @extern("notmuch_query_create");
 
-def Notmuch_query_syntax_t = int;
 enum QuerySyntax {
     XAPIAN,
     SEXP
@@ -1004,12 +1002,11 @@ enum QuerySyntax {
 extern fn Notmuch_status_t
 notmuch_query_create_with_syntax (Notmuch_database_t *database,
 				  char *query_string,
-				  Notmuch_query_syntax_t syntax,
+				  QuerySyntax syntax,
 				  Notmuch_query_t **output) @extern("notmuch_query_create_with_syntax");
 /*
  * Sort values for notmuch_query_set_sort.
  */
-def Notmuch_sort_t = int;
 enum Sort {
     /*
      * Oldest first.
@@ -1047,7 +1044,6 @@ notmuch_query_get_database (Notmuch_query_t *query) @extern("notmuch_query_get_d
  * options correspond to the new
  * NOTMUCH_EXCLUDE_FLAG/NOTMUCH_EXCLUDE_TRUE options.
  */
-def Notmuch_exclude_t = int;
 enum Exclude {
     FLAG,
     TRUE,
@@ -1084,19 +1080,19 @@ enum Exclude {
  */
 extern fn void
 notmuch_query_set_omit_excluded (Notmuch_query_t *query,
-				 Notmuch_exclude_t omit_excluded) @extern("notmuch_query_set_omit_excluded");
+				 Exclude omit_excluded) @extern("notmuch_query_set_omit_excluded");
 
 /*
  * Specify the sorting desired for this query.
  */
 extern fn void
-notmuch_query_set_sort (Notmuch_query_t *query, Notmuch_sort_t sort) @extern("notmuch_query_set_sort");
+notmuch_query_set_sort (Notmuch_query_t *query, Sort sort) @extern("notmuch_query_set_sort");
 
 /*
  * Return the sort specified for this query. See
  * notmuch_query_set_sort.
  */
-extern fn Notmuch_sort_t
+extern fn Sort
 notmuch_query_get_sort (Notmuch_query_t *query) @extern("notmuch_query_get_sort");
 
 /*
@@ -1721,7 +1717,6 @@ notmuch_message_reindex (Notmuch_message_t *message,
 /*
  * Message flags.
  */
-def Notmuch_message_flag_t = int;
 enum MessageFlag {
     MATCH,
     EXCLUDED,
@@ -1765,7 +1760,7 @@ notmuch_message_get_flag (Notmuch_message_t *message,
  */
 extern fn Notmuch_status_t
 notmuch_message_get_flag_st (Notmuch_message_t *message,
-			     Notmuch_message_flag_t flag,
+			     MessageFlag flag,
 			     Notmuch_bool_t *is_set) @extern("notmuch_message_get_flag_st");
 
 /*
@@ -1773,7 +1768,7 @@ notmuch_message_get_flag_st (Notmuch_message_t *message,
  */
 extern fn void
 notmuch_message_set_flag (Notmuch_message_t *message,
-			  Notmuch_message_flag_t flag, Notmuch_bool_t value) @extern("notmuch_message_set_flag");
+			  MessageFlag flag, Notmuch_bool_t value) @extern("notmuch_message_set_flag");
 
 /*
  * Get the date of 'message' as a time_t value.
@@ -2578,7 +2573,6 @@ notmuch_config_list_destroy (Notmuch_config_list_t *config_list) @extern("notmuc
 /*
  * Configuration keys known to libnotmuch
  */
-def Notmuch_config_key_t = int;
 enum ConfigKey : int {
     // FIRST,
     DATABASEPATH, // = FIRST
@@ -2614,7 +2608,7 @@ enum ConfigKey : int {
  *         not be modified nor freed by the caller.
  */
 extern fn char *
-notmuch_config_get (Notmuch_database_t *notmuch, Notmuch_config_key_t key) @extern("notmuch_config_get");
+notmuch_config_get (Notmuch_database_t *notmuch, ConfigKey key) @extern("notmuch_config_get");
 
 /*
  * set a configuration value from in an open database.
@@ -2631,7 +2625,7 @@ notmuch_config_get (Notmuch_database_t *notmuch, Notmuch_config_key_t key) @exte
  * @retval returns any return value for notmuch_database_set_config.
  */
 extern fn Notmuch_status_t
-notmuch_config_set (Notmuch_database_t *notmuch, Notmuch_config_key_t key, char *val) @extern("notmuch_config_set");
+notmuch_config_set (Notmuch_database_t *notmuch, ConfigKey key, char *val) @extern("notmuch_config_set");
 
 /*
  * Returns an iterator for a ';'-delimited list of configuration values
@@ -2647,7 +2641,7 @@ notmuch_config_set (Notmuch_database_t *notmuch, Notmuch_config_key_t key, char 
  * @retval NULL in case of error.
  */
 extern fn Notmuch_config_values_t *
-notmuch_config_get_values (Notmuch_database_t *notmuch, Notmuch_config_key_t key) @extern("notmuch_config_get_values");
+notmuch_config_get_values (Notmuch_database_t *notmuch, ConfigKey key) @extern("notmuch_config_get_values");
 
 /*
  * Returns an iterator for a ';'-delimited list of configuration values
@@ -2815,7 +2809,7 @@ notmuch_config_pairs_destroy (Notmuch_config_pairs_t *pairs) @extern("notmuch_co
  */
 extern fn Notmuch_status_t
 notmuch_config_get_bool (Notmuch_database_t *notmuch,
-			 Notmuch_config_key_t key,
+			 ConfigKey key,
 			 Notmuch_bool_t *val) @extern("notmuch_config_get_bool");
 
 /*
@@ -2847,7 +2841,6 @@ notmuch_database_get_default_indexopts (Notmuch_database_t *db) @extern("notmuch
  *
  * See index.decrypt in notmuch-config(1) for more details.
  */
-def Notmuch_decryption_policy_t = int;
 enum DecryptionPolicy {
     FALSE,
     TRUE,
@@ -2867,7 +2860,7 @@ enum DecryptionPolicy {
  */
 extern fn Notmuch_status_t
 notmuch_indexopts_set_decrypt_policy (Notmuch_indexopts_t *indexopts,
-				      Notmuch_decryption_policy_t decrypt_policy) @extern("notmuch_indexopts_set_decrypt_policy");
+				      DecryptionPolicy decrypt_policy) @extern("notmuch_indexopts_set_decrypt_policy");
 
 /*
  * Return whether to decrypt encrypted parts while indexing.
@@ -2875,7 +2868,7 @@ notmuch_indexopts_set_decrypt_policy (Notmuch_indexopts_t *indexopts,
  *
  * @Since libnotmuch 5.1 (notmuch 0.26)
  */
-extern fn Notmuch_decryption_policy_t
+extern fn DecryptionPolicy
 notmuch_indexopts_get_decrypt_policy (Notmuch_indexopts_t *indexopts) @extern("notmuch_indexopts_get_decrypt_policy");
 
 /*
