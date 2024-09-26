@@ -426,7 +426,7 @@ extern fn Notmuch_status_t database_open_with_config (ZString database_path,
  * since libnotmuch 5.4 (notmuch 0.32)
  */
 
-extern fn Notmuch_status_t notmuch_database_load_config (ZString database_path,
+extern fn Notmuch_status_t database_load_config (ZString database_path,
 			      ZString config_path,
 			      ZString profile,
 			      Notmuch_database_t **database,
