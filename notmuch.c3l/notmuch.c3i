@@ -98,7 +98,7 @@ enum Notmuch_status_t {
      * value. Instead we should map to things like DATABASE_LOCKED or
      * whatever.
      */
-    EXCEPTION,
+    XAPIAN_EXCEPTION,
     /*
      * An error occurred trying to read or write to a file (this could
      * be file not found, permission denied, etc.)
