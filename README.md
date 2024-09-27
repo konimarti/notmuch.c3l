@@ -11,7 +11,7 @@ Notmuch bindings for C3 with a high-level C3 wrapper API.
 
 Copy the `notmuch.c3l` folder into the `lib` directory of your project.
 
-#### Low-level direct libnotmuch bindings
+#### Direct libnotmuch access
 
 ```c3
 // c3c compile-run examples/low-level-api.c3 notmuch.c3i wrapper.c3 -l notmuch
