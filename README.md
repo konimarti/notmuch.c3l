@@ -23,7 +23,7 @@ Add the path to the `notmuch.c3l` folder to `dependency-search-paths` and
 
 #### Direct libnotmuch access
 
-```c3
+```cpp
 // c3c compile-run examples/low-level-api.c3 notmuch.c3i wrapper.c3 -l notmuch
 import std::io;
 import notmuch;
@@ -64,7 +64,7 @@ fn void main() {
 
 #### High-level C3 API for notmuch
 
-```c3
+```cpp
 // c3c compile-run examples/high-level-api.c3 notmuch.c3i wrapper.c3 -l notmuch
 import std::io;
 import nm;
