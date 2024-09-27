@@ -68,6 +68,8 @@ const LIBNOTMUCH_MICRO_VERSION = 0;
  * Notmuch boolean type.
  */
 def Notmuch_bool_t = int;
+const TRUE = 1;
+const FALSE = 0;
 
 /*
  * Status codes used for the return values of most functions.
@@ -588,9 +590,9 @@ extern fn Notmuch_bool_t database_needs_upgrade (Notmuch_database_t *database) @
  * the upgrade process.  The argument 'closure' is passed verbatim to
  * any callback invoked.
  */
-def ProgressNotify = fn void (void *closure, double progress);
+def ProgressNotify = fn void (uptr closure, double progress);
 extern fn Notmuch_status_t database_upgrade (Notmuch_database_t *database, ProgressNotify pn,
-			  void *closure) @extern("notmuch_database_upgrade");
+			  uptr closure) @extern("notmuch_database_upgrade");
 
 /**
  * Begin an atomic database operation.
@@ -679,7 +681,7 @@ extern fn Notmuch_status_t database_get_directory (Notmuch_database_t *database,
 				ZString path,
 				Notmuch_directory_t **directory) @extern("notmuch_database_get_directory");
 
-/*
+/**
  * Add a message file to a database, indexing it for retrieval by
  * future searches.  If a message already exists with the same message
  * ID as the specified file, their indexes will be merged, and this
@@ -728,7 +730,7 @@ extern fn Notmuch_status_t database_get_directory (Notmuch_database_t *database,
  *	file, (such as permission denied, or file not found,
  *	etc.). Nothing added to the database.
  *
- * NOTMUCH_STATUS_FILE_NOT_EMAIL: the contents of filename don't look
+ * NOTMUCH_STATUS_FILE_NOT_EMAIL: the contents of filename dont look
  *	like an email message. Nothing added to the database.
  *
  * NOTMUCH_STATUS_READ_ONLY_DATABASE: Database was opened in read-only
@@ -752,8 +754,7 @@ extern fn Notmuch_status_t database_index_file (Notmuch_database_t *database,
  * use notmuch_database_index_file instead.
  *
  */
-extern fn Notmuch_status_t
-database_add_message (Notmuch_database_t *database,
+extern fn Notmuch_status_t database_add_message (Notmuch_database_t *database,
 			      ZString filename,
 			      Notmuch_message_t **message) @extern("notmuch_database_add_message") @deprecated;
 
@@ -811,8 +812,7 @@ extern fn Notmuch_status_t database_remove_message (Notmuch_database_t *database
  *
  * NOTMUCH_STATUS_XAPIAN_EXCEPTION: A Xapian exception occurred
  */
-extern fn Notmuch_status_t
-database_find_message (Notmuch_database_t *database,
+extern fn Notmuch_status_t database_find_message (Notmuch_database_t *database,
 			       ZString message_id,
 			       Notmuch_message_t **message) @extern("notmuch_database_find_message");
 
