@@ -7,27 +7,19 @@ Notmuch bindings for C3 with a high-level C3 wrapper API.
 -   `libnotmuch` should be installed on your system.
     See [installation instructions](https://notmuchmail.org/#index7h2).
 
-### Usage
+### Setup
 
-Copy the `notmuch.c3l` folder into the `lib` directory of your project.
-
-And add the path to the `notmuch.c3l` folder to `dependency-search-paths` and
+Add the path to the `notmuch.c3l` folder to `dependency-search-paths` and
 `notmuch` to `dependencies` in your `project.json` file:
 
 ```json
 {
-	[...]
-
-	// Directories where C3 library files may be found.
-	"dependency-search-paths": ["lib", "<path_to_notmuch.c3l_folder>"],
-
-	// Libraries to use for all targets.
-	"dependencies": ["notmuch"],
-
-	[...]
+    "dependency-search-paths": ["lib", "<path_to_notmuch.c3l_folder>"],
+    "dependencies": ["notmuch"]
 }
-
 ```
+
+### Examples
 
 #### Direct libnotmuch access
 
