@@ -11,6 +11,24 @@ Notmuch bindings for C3 with a high-level C3 wrapper API.
 
 Copy the `notmuch.c3l` folder into the `lib` directory of your project.
 
+And add the path to the `notmuch.c3l` folder to `dependency-search-paths` and
+`notmuch` to `dependencies` in your `project.json` file:
+
+```json
+{
+	[...]
+
+	// Directories where C3 library files may be found.
+	"dependency-search-paths": ["lib", "<path_to_notmuch.c3l_folder>"],
+
+	// Libraries to use for all targets.
+	"dependencies": ["notmuch"],
+
+	[...]
+}
+
+```
+
 #### Direct libnotmuch access
 
 ```c3
