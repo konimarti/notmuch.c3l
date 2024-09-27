@@ -94,6 +94,10 @@ fn Status Database.end_atomic(&self) {
 	return notmuch::database_end_atomic(self.db);
 }
 
+fn ulong Database.revision(&self, ZString *uuid) {
+	return notmuch::database_get_revision(self.db, uuid);
+}
+
 fn IndexOpts* Database.default_indexopts(&self) {
 	return notmuch::database_get_default_indexopts(self.db);
 }
