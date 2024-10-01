@@ -82,7 +82,7 @@ fn bool Database.needs_upgrade(&self) {
 	return return_bool(notmuch::database_needs_upgrade(self.db));
 }
 
-fn Status Database.upgrade(&self, ProgressNotify pn, uptr closure) {
+fn Status Database.upgrade(&self, ProgressNotify pn, void *closure) {
 	return notmuch::database_upgrade(self.db, pn, closure);
 }
 

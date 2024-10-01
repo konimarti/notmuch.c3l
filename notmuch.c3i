@@ -215,19 +215,19 @@ extern fn ZString status_to_string (Notmuch_status_t status) @extern("Notmuch_st
 /* Various opaque data types. For each Notmuch_<foo>_t see the various
  * notmuch_<foo> functions below. */
 */
-def Notmuch_database_t = uptr;
-def Notmuch_query_t = uptr;
-def Notmuch_threads_t = uptr;
-def Notmuch_thread_t = uptr;
-def Notmuch_messages_t = uptr;
-def Notmuch_message_t = uptr;
-def Notmuch_tags_t = uptr;
-def Notmuch_directory_t = uptr;
-def Notmuch_filenames_t = uptr;
-def Notmuch_config_list_t = uptr;
-def Notmuch_config_values_t = uptr;
-def Notmuch_config_pairs_t = uptr;
-def Notmuch_indexopts_t = uptr;
+def Notmuch_database_t = void;
+def Notmuch_query_t = void;
+def Notmuch_threads_t = void;
+def Notmuch_thread_t = void;
+def Notmuch_messages_t = void;
+def Notmuch_message_t = void;
+def Notmuch_tags_t = void;
+def Notmuch_directory_t = void;
+def Notmuch_filenames_t = void;
+def Notmuch_config_list_t = void;
+def Notmuch_config_values_t = void;
+def Notmuch_config_pairs_t = void;
+def Notmuch_indexopts_t = void;
 
 /*
  * Create a new, empty notmuch database located at 'path'.
@@ -590,9 +590,9 @@ extern fn Notmuch_bool_t database_needs_upgrade (Notmuch_database_t *database) @
  * the upgrade process.  The argument 'closure' is passed verbatim to
  * any callback invoked.
  */
-def ProgressNotify = fn void (uptr closure, double progress);
+def ProgressNotify = fn void (void *closure, double progress);
 extern fn Notmuch_status_t database_upgrade (Notmuch_database_t *database, ProgressNotify pn,
-			  uptr closure) @extern("notmuch_database_upgrade");
+			  void *closure) @extern("notmuch_database_upgrade");
 
 /**
  * Begin an atomic database operation.
@@ -1975,7 +1975,7 @@ extern fn Notmuch_status_t message_remove_all_properties_with_prefix (Notmuch_me
 /*
  * Opaque message property iterator
  */
-def Notmuch_message_properties_t = uptr;
+def Notmuch_message_properties_t = void;
 
 /**
  * Get the properties for *message*, returning a
